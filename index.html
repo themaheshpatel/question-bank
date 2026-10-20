@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maths Question Bank</title>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" defer></script>
+<script src="questions.js"></script>
+<style>
+  :root {
+    --bg: #f6f7f9; --panel: #ffffff; --text: #1d2330; --muted: #5d6677;
+    --line: #dfe3ea; --accent: #2457c5; --accent-soft: #e6edfb;
+    --l1: #1f8a4c; --l2: #b7791f; --l3: #c53030; --warn-bg: #fff4e5; --warn: #8a4b00;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12151b; --panel: #1b2029; --text: #e6e9ef; --muted: #9aa3b5;
+      --line: #2c3340; --accent: #7aa2ff; --accent-soft: #233150;
+      --l1: #4cc283; --l2: #e0a84a; --l3: #f07171; --warn-bg: #3a2a12; --warn: #ffcf8a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+         background: var(--bg); color: var(--text); line-height: 1.5; }
+  header { padding: 18px 20px; border-bottom: 1px solid var(--line); background: var(--panel); }
+  header h1 { margin: 0; font-size: 1.35rem; }
+  header p { margin: 4px 0 0; color: var(--muted); font-size: .9rem; }
+  .layout { display: grid; grid-template-columns: 320px 1fr; gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto; }
+  @media (max-width: 800px) { .layout { grid-template-columns: 1fr; padding: 12px; } }
+  aside, .card, #status { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+  aside { padding: 14px; align-self: start; position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow: auto; }
+  @media (max-width: 800px) { aside { position: static; max-height: none; } }
+  aside h2 { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 14px 0 6px; }
+  aside h2:first-child { margin-top: 0; }
+  label { display: flex; align-items: flex-start; gap: 8px; cursor: pointer; padding: 3px 0; }
+  input[type=checkbox], input[type=radio] { margin-top: 4px; accent-color: var(--accent); }
+  details.topic { border: 1px solid var(--line); border-radius: 8px; margin-bottom: 8px; }
+  details.topic summary { list-style: none; padding: 8px 10px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  details.topic summary::-webkit-details-marker { display: none; }
+  details.topic summary .arrow { color: var(--muted); transition: transform .15s; }
+  details.topic[open] summary .arrow { transform: rotate(90deg); }
+  .subs { padding: 0 10px 8px 14px; font-size: .92rem; }
+  .tools { display:flex; gap:6px; margin:2px 0 6px; }
+  .mini { padding:3px 8px; font:inherit; font-size:.78rem; border-radius:6px; border:1px solid var(--line); background:var(--bg); color:var(--text); cursor:pointer; }
+  .mini:hover { border-color: var(--accent); color: var(--accent); }
+  .selcount { margin-left:auto; color:var(--muted); font-size:.8rem; }
+  .count { color: var(--muted); font-size: .8rem; margin-left: auto; padding-left: 6px; }
+  .hint { color: var(--muted); font-size: .82rem; margin: 2px 0 0 24px; }
+  .btn { margin-top: 12px; width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--line);
+         background: var(--bg); color: var(--text); cursor: pointer; font: inherit; }
+  #status { padding: 10px 14px; margin-bottom: 14px; font-size: .92rem; }
+  #warnings { background: var(--warn-bg); color: var(--warn); border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; font-size: .88rem; }
+  .card { padding: 14px 16px; margin-bottom: 14px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 8px; font-size: .78rem; }
+  .qid { font-weight: 600; color: var(--muted); margin-right: 4px; }
+  .chip { padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+  .lvl { padding: 2px 8px; border-radius: 999px; color: #fff; font-weight: 600; }
+  .lvl1 { background: var(--l1); } .lvl2 { background: var(--l2); } .lvl3 { background: var(--l3); }
+  .mixed { padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+  .qtext { font-size: 1rem; overflow-x: auto; }
+  ol.opts { list-style: upper-alpha; padding-left: 26px; margin: 8px 0; }
+  ol.opts li { margin: 3px 0; }
+  .qtext img, .sol img { max-width: 100%; height: auto; }
+  details.sol { margin-top: 10px; border-top: 1px dashed var(--line); padding-top: 8px; }
+  details.sol summary { cursor: pointer; color: var(--accent); font-size: .9rem; }
+  .sol .ans { font-weight: 600; margin: 6px 0; }
+  mjx-container { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+</style>
+</head>
+<body>
+<header>
+  <h1 id="bankTitle">Question Bank</h1>
+  <p>Open a chapter, tick the subtopics you want (or use Select all), then choose levels. A mixed question appears only when <strong>all</strong> the concepts it uses are ticked.</p>
+</header>
+
+<div class="layout">
+  <aside>
+    <h2>Level</h2>
+    <div id="levels"></div>
+
+    <h2>Match rule</h2>
+    <label><input type="radio" name="mode" value="strict" checked>
+      <span>Only selected concepts</span></label>
+    <div class="hint">Mixed questions need all their topics/subtopics ticked.</div>
+    <label><input type="radio" name="mode" value="any">
+      <span>Uses any selected concept</span></label>
+    <div class="hint">Also shows questions that bring in other concepts.</div>
+
+    <h2>Chapters</h2>
+    <div id="topics"></div>
+
+    <button class="btn" id="clearAll">Unselect everything</button>
+  </aside>
+
+  <main>
+    <div id="warnings" hidden></div>
+    <div id="status"></div>
+    <div id="list"></div>
+  </main>
+</div>
+
+<script>
+(function () {
+  const LEVELS = [1, 2, 3];
+  const SEP = " \u203A ";                       // "Topic › Subtopic"
+  const key = (t, s) => t + "\u0000" + s;
+  const state = { subs: new Set(), levels: new Set(LEVELS), mode: "strict" };
+
+  document.getElementById("bankTitle").textContent = (typeof BANK_TITLE !== "undefined" && BANK_TITLE) || "Question Bank";
+
+  // ---------- validation: catches tagging mistakes before students see them ----------
+  const problems = [];
+  const valid = new Set();
+  Object.entries(TAXONOMY).forEach(([t, subs]) => subs.forEach(s => valid.add(key(t, s))));
+  const seen = new Set();
+  QUESTIONS.forEach((q, i) => {
+    const name = q.id || ("#" + (i + 1));
+    if (!q.id) problems.push(name + ": missing id");
+    else if (seen.has(q.id)) problems.push(name + ": duplicate id");
+    seen.add(q.id);
+    if (!LEVELS.includes(q.level)) problems.push(name + ": level must be 1, 2 or 3");
+    const entries = Object.entries(q.topics || {});
+    if (!entries.length) problems.push(name + ": no topics");
+    entries.forEach(([t, subs]) => {
+      if (!TAXONOMY[t]) problems.push(name + ': unknown topic "' + t + '"');
+      else if (!subs || !subs.length) problems.push(name + ': topic "' + t + '" has no subtopic');
+      else subs.forEach(s => { if (!valid.has(key(t, s))) problems.push(name + ': unknown subtopic "' + t + SEP + s + '"'); });
+    });
+  });
+  if (problems.length) {
+    const w = document.getElementById("warnings");
+    w.hidden = false;
+    w.innerHTML = "<strong>Data issues (" + problems.length + "):</strong><br>" + problems.map(esc).join("<br>");
+  }
+
+  const tagKeys = q => Object.entries(q.topics || {}).flatMap(([t, subs]) => (subs || []).map(s => key(t, s)));
+
+  // ---------- the filter rule ----------
+  function matches(q) {
+    if (!state.levels.has(q.level)) return false;
+    const ks = tagKeys(q);
+    if (!ks.length || state.subs.size === 0) return false;
+    return state.mode === "strict"
+      ? ks.every(k => state.subs.has(k))   // all concepts used are selected
+      : ks.some(k => state.subs.has(k));   // at least one concept used is selected
+  }
+
+  // ---------- build filter UI ----------
+  const lv = document.getElementById("levels");
+  LEVELS.forEach(L => {
+    const n = QUESTIONS.filter(q => q.level === L).length;
+    lv.insertAdjacentHTML("beforeend",
+      '<label><input type="checkbox" data-level="' + L + '" checked><span>Level ' + L + '</span><span class="count">' + n + '</span></label>');
+  });
+  lv.addEventListener("change", e => {
+    const L = Number(e.target.dataset.level);
+    e.target.checked ? state.levels.add(L) : state.levels.delete(L);
+    render();
+  });
+
+  document.querySelectorAll('input[name=mode]').forEach(r =>
+    r.addEventListener("change", e => { state.mode = e.target.value; render(); }));
+
+  const subCount = {};
+  QUESTIONS.forEach(q => tagKeys(q).forEach(k => subCount[k] = (subCount[k] || 0) + 1));
+
+  const tp = document.getElementById("topics");
+  Object.entries(TAXONOMY).forEach(([t, subs], ti) => {
+    const d = document.createElement("details");
+    d.className = "topic";
+    d.innerHTML =
+      '<summary><span>' + esc(t) + '</span><span class="selcount" data-c="' + ti + '"></span><span class="arrow">&#9656;</span></summary>' +
+      '<div class="subs"><div class="tools">' +
+      '<button type="button" class="mini" data-act="all" data-t="' + ti + '">Select all</button>' +
+      '<button type="button" class="mini" data-act="none" data-t="' + ti + '">Unselect all</button></div>' +
+      subs.map((s, si) =>
+        '<label><input type="checkbox" class="sbox" data-t="' + ti + '" data-s="' + si + '"><span>' + esc(s) +
+        '</span><span class="count">' + (subCount[key(t, s)] || 0) + '</span></label>').join("") + '</div>';
+    tp.appendChild(d);
+  });
+  const topicNames = Object.keys(TAXONOMY);
+
+  // Select all / Unselect all inside one chapter
+  tp.addEventListener("click", e => {
+    const b = e.target.closest(".mini");
+    if (!b) return;
+    const t = topicNames[b.dataset.t];
+    TAXONOMY[t].forEach(s => b.dataset.act === "all" ? state.subs.add(key(t, s)) : state.subs.delete(key(t, s)));
+    syncBoxes(); render();
+  });
+  // Manual ticking of individual subtopics
+  tp.addEventListener("change", e => {
+    if (!e.target.classList.contains("sbox")) return;
+    const t = topicNames[e.target.dataset.t];
+    const s = TAXONOMY[t][e.target.dataset.s];
+    e.target.checked ? state.subs.add(key(t, s)) : state.subs.delete(key(t, s));
+    syncBoxes(); render();
+  });
+
+  document.getElementById("clearAll").onclick = () => { state.subs.clear(); syncBoxes(); render(); };
+
+  function syncBoxes() {
+    topicNames.forEach((t, ti) => {
+      const subs = TAXONOMY[t];
+      const on = subs.filter(s => state.subs.has(key(t, s))).length;
+      tp.querySelector('[data-c="' + ti + '"]').textContent = on ? on + "/" + subs.length + " selected" : "";
+      subs.forEach((s, si) => { tp.querySelector('.sbox[data-t="' + ti + '"][data-s="' + si + '"]').checked = state.subs.has(key(t, s)); });
+    });
+  }
+
+  // ---------- render questions ----------
+  function render() {
+    const list = document.getElementById("list");
+    const status = document.getElementById("status");
+    if (state.subs.size === 0) {
+      status.textContent = "Open a chapter and tick at least one subtopic to see questions.";
+      list.innerHTML = "";
+      return;
+    }
+    const shown = QUESTIONS.filter(matches).sort((a, b) => a.level - b.level || String(a.id).localeCompare(String(b.id)));
+    status.textContent = shown.length + " question" + (shown.length === 1 ? "" : "s") + " match your selection.";
+    list.innerHTML = shown.map(card).join("");
+    if (window.MathJax && MathJax.typesetPromise) {
+      MathJax.typesetClear && MathJax.typesetClear([list]);
+      MathJax.typesetPromise([list]).catch(err => console.error(err));
+    }
+  }
+
+  function card(q) {
+    const entries = Object.entries(q.topics);
+    const chips = entries.flatMap(([t, subs]) => subs.map(s => '<span class="chip">' + esc(t + SEP + s) + '</span>')).join("");
+    const mixed = entries.length > 1 ? '<span class="mixed">Mixed</span>' : "";
+    const opts = Array.isArray(q.options) && q.options.length
+      ? '<ol class="opts">' + q.options.map(o => "<li>" + o + "</li>").join("") + "</ol>" : "";
+    const type = q.type ? '<span class="mixed">' + esc(q.type) + '</span>' : "";
+    const sol = (q.answer || q.solution)
+      ? '<details class="sol"><summary>Show answer &amp; solution</summary>' +
+        (q.answer ? '<div class="ans">Answer: ' + q.answer + '</div>' : "") +
+        (q.solution ? '<div>' + q.solution + '</div>' : "") + '</details>' : "";
+    return '<article class="card"><div class="meta"><span class="qid">' + esc(q.id) + '</span>' +
+      '<span class="lvl lvl' + q.level + '">Level ' + q.level + '</span>' + type + mixed + chips + '</div>' +
+      '<div class="qtext">' + q.question + '</div>' + opts + sol + '</article>';
+  }
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+  syncBoxes(); render();
+})();
+</script>
+</body>
+</html>
